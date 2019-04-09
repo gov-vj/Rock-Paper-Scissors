@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <script>
+            const ROCK = 'rock';
+            const SCISSOR = 'scissor';
+            const PAPER = 'paper';
+            const ROCK_ID = 0;
+            const SCISSOR_ID = 1;
+            const PAPER_ID = 2;
+            const DRAW = 'draw';
+            const COMPUTER = 'computer';
+            const PLAYER = 'player'
+
+            function getChoiceId(choice) {
+                switch(choice) {
+                    case 'rock': return ROCK_ID;
+                    case 'scissor': return SCISSOR_ID;
+                    case 'paper': return PAPER_ID;
+                }
+            }
+
+            function whoWon(playerChoiceId, computerChoiceId) {
+                const modDiff = ((playerChoiceId - computerChoiceId) % 3 + 3) % 3;
+                switch(modDiff) {
+                    case 0: return DRAW;
+                    case 1: return COMPUTER;
+                    case 2: return PLAYER;
+                }
+            }
+
+            function getMsg(winner, playerSelection, computerSelection) {
+                playerSelection = playerSelection.toUpperCase();
+                computerSelection = computerSelection.toUpperCase();
+                switch(winner) {
+                    case DRAW: return 'DRAW!';
+                    case COMPUTER: return `You Lose! ${computerSelection} beats ${playerSelection}`;
+                    case PLAYER: return `You Win! ${playerSelection} beats ${computerSelection}`;
+                }
+            }
+
+            function computerPlay() {
+                const choice = [ROCK, SCISSOR, PAPER];
+                return choice[Math.floor(Math.random() * choice.length)];
+            }
+
+            function playRound(playerSelection, computerSelection) {
+                if(!playerSelection) throw('Empty Value');
+                playerSelection = playerSelection.trim().toLowerCase();
+                if(playerSelection !== ROCK && playerSelection !== SCISSOR && playerSelection !== PAPER) throw('Invalid Input');
+                const playerSelectionId = getChoiceId(playerSelection);
+                const computerSelectionId = getChoiceId(computerSelection);
+                const winner = whoWon(playerSelectionId, computerSelectionId);
+                return getMsg(winner, playerSelection, computerSelection);
+            }
+
+            function game() {
+                for (let i=0; i<5; i+=1) {
+                    const playerSelection = prompt("Rock, Paper or Scissor?");
+                    try{
+                        console.log(playRound(playerSelection, computerPlay()));
+                    } catch(e) {
+                        console.error(e);
+                    }
+                }
+            }
+        </script>
+    </head>
+</html>
