@@ -52,19 +52,56 @@
                 const playerSelectionId = getChoiceId(playerSelection);
                 const computerSelectionId = getChoiceId(computerSelection);
                 const winner = whoWon(playerSelectionId, computerSelectionId);
-                return getMsg(winner, playerSelection, computerSelection);
-            }
-
-            function game() {
-                for (let i=0; i<5; i+=1) {
-                    const playerSelection = prompt("Rock, Paper or Scissor?");
-                    try{
-                        console.log(playRound(playerSelection, computerPlay()));
-                    } catch(e) {
-                        console.error(e);
-                    }
-                }
+                return winner;
             }
         </script>
+        
     </head>
+    <body>
+        <div id="options">
+            <button id="rock">Rock</button>
+            <button id="scissor">Scissor</button>
+            <button id="paper">Paper</button>
+        </div>
+        <div id="results">
+            <div id="msg"></div>
+            <div id="score">
+                <span>You: 0 vs Computer: 0</span>
+            </div>
+            <div id="winner"></div>
+        </div>
+    </body>
+    <script>
+        const buttons = document.querySelectorAll('button');
+        const msgElement = document.querySelector('#msg');
+        const scoreElement = document.querySelector('#score span');
+        const winnerElement = document.querySelector('#winner');
+        let playerScore = 0;
+        let computerScore = 0;
+        buttons.forEach(button => {
+            button.addEventListener('click', function(ev) {
+                if(playerScore === 5 || computerScore === 5) {
+                    playerScore = 0;
+                    computerScore = 0;
+                    winnerElement.innerHTML = '';
+                }
+                const playerSelection = button.id;
+                const computerSelection = computerPlay();
+                const winner = playRound(playerSelection, computerSelection);
+                switch(winner) {
+                    case DRAW:
+                        break;
+                    case COMPUTER:
+                        computerScore+=1;
+                        break;
+                    case PLAYER:
+                        playerScore+=1;
+                }
+                msgElement.innerHTML = '<p>'+getMsg(winner, playerSelection, computerSelection)+'</p>';
+                scoreElement.innerText = `You: ${playerScore} vs Computer: ${computerScore}`;
+                if(playerScore === 5) winnerElement.innerHTML = '<p>You Win</p>';
+                else if(computerScore === 5) winnerElement.innerHTML = '<p>Computer Win</p>';
+            });
+        });
+    </script>
 </html>
